@@ -51,57 +51,91 @@ $ns node-config -adhocRouting $opt(adhocRouting) \
                  -topoInstance $topo \
                  -agentTrace ON \
                  -routerTrace ON \
-                 -macTrace ON \
+                 -macTrace OFF \
                  -wiredRouting OFF \
                  -movementTrace OFF 
 
 
 # Create nodes
 set A [$ns node]
-    $A set X_ 100.0
-    $A set Y_ 400.0
-    $A set Z_ 0.0
+    $A set X_ 100
+    $A set Y_ 400
+    $A set Z_ 0
 
 set B [$ns node]
-    $B set X_ 50.0
-    $B set Y_ 250.0
-    $B set Z_ 0.0
+    $B set X_ 50
+    $B set Y_ 250
+    $B set Z_ 0
 
 set C [$ns node]
-    $C set X_ 200.0
-    $C set Y_ 300.0
-    $C set Z_ 0.0
+    $C set X_ 200
+    $C set Y_ 300
+    $C set Z_ 0
 
 set D [$ns node]
-    $D set X_ 100.0
-    $D set Y_ 100.0
-    $D set Z_ 0.0
+    $D set X_ 100
+    $D set Y_ 100
+    $D set Z_ 0
 
 set E [$ns node]
-    $E set X_ 200.0
-    $E set Y_ 200.0
-    $E set Z_ 0.0
+    $E set X_ 200
+    $E set Y_ 200
+    $E set Z_ 0
 
 set F [$ns node]
-    $F set X_ 200.0
-    $F set Y_ 300.0
-    $F set Z_ 0.0
+    $F set X_ 200
+    $F set Y_ 300
+    $F set Z_ 0
 
 set G [$ns node]
-    $G set X_ 300.0
-    $G set Y_ 300.0
-    $G set Z_ 0.0
+    $G set X_ 300
+    $G set Y_ 300
+    $G set Z_ 0
+
 set H [$ns node]
-    $H set X_ 400.0
-    $H set Y_ 300.0
-    $H set Z_ 0.0
+    $H set X_ 400
+    $H set Y_ 300
+    $H set Z_ 0
 
 set L [$ns node]
-    $L set X_ 200.0
-    $L set Y_ 400.0
-    $L set Z_ 0.0
+    $L set X_ 200
+    $L set Y_ 400
+    $L set Z_ 0
 
+# Create UDP agents and CBR traffic sources and attach them to node A nd D
+set udpA [new Agent/UDP]
+set cbrA [new Application/Traffic/CBR]
+$ns attach-agent $A $udpA
+$cbrA attach-agent $udpA
 
+set udpD [new Agent/UDP]
+set cbrD [new Application/Traffic/CBR]
+$ns attach-agent $D $udpD
+$cbrD attach-agent $udpD
+
+# Create Null agents (traffic sinks) and attach them to node H and L
+set recvH [new Agent/Null]
+$ns attach-agent $H $recvH
+
+set recvL [new Agent/Null]
+$ns attach-agent $L $recvL
+
+# Connecting sender and receiver nodes
+$ns connect $udpA $recvH
+$ns connect $udpD $recvL
+
+$ns initial_node_pos $A 10
+$ns initial_node_pos $B 10
+$ns initial_node_pos $C 10
+$ns initial_node_pos $D 10
+$ns initial_node_pos $E 10
+$ns initial_node_pos $F 10
+$ns initial_node_pos $G 10
+$ns initial_node_pos $H 10
+$ns initial_node_pos $L 10
+
+$ns at 1.0 "$cbrA start"
+$ns at 2.0 "$cbrD start"
 $ns at $opt(finish) "finish"
 
 proc finish {} {
