@@ -39,10 +39,12 @@ set ns [new Simulator]
 set outdir "outFiles/"
 file mkdir $outdir
 
+set senario "$bandwidth-$packetsize-$err_rate"
+
 # Set Up Tracing
 #$ns use-newtrace
-set tracefd [open outFiles/WLan.tr w]
-set namtrace [open outFiles/WLan.nam w]
+set tracefd [open outFiles/$senario.tr w]
+set namtrace [open outFiles/$senario.nam w]
 $ns trace-all $tracefd
 $ns namtrace-all-wireless $namtrace $opt(x) $opt(y)
 
