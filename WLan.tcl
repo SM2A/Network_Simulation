@@ -11,7 +11,7 @@ set opt(ll)             LL                       ;# link layer type
 set opt(ant)            Antenna/OmniAntenna      ;# antenna model
 set opt(ifqlen)         50                       ;# max packet in ifq
 set opt(adhocRouting)   AODV                     ;# routing protocol
-set opt(finish)         100                      ;# time to stop simulation
+set opt(finish)         10                       ;# time to stop simulation
 set opt(x)              600                      ;# X coordinate of the topography
 set opt(y)              500                      ;# Y coordinate of the topography
 set opt(nNodes)         9                        ;# number of nodes
@@ -24,7 +24,7 @@ set outdir "outFiles/"
 file mkdir $outdir
 
 # Set Up Tracing
-$ns use-newtrace
+#$ns use-newtrace
 set tracefd [open outFiles/WLan.tr w]
 set namtrace [open outFiles/WLan.nam w]
 $ns trace-all $tracefd
@@ -51,9 +51,21 @@ $ns node-config -adhocRouting $opt(adhocRouting) \
                  -topoInstance $topo \
                  -agentTrace ON \
                  -routerTrace ON \
-                 -macTrace OFF \
-                 -wiredRouting OFF \
+                 -macTrace ON \
                  -movementTrace OFF 
+
+#=====================================================
+# Error Model Configuration
+#=====================================================
+$ns node-config -IncomingErrProc UniformErr \
+                -OutgoingErrProc UniformErr
+
+proc UniformErr {} {
+    set err [new ErrorModel]
+    $err unit packet
+    $err rate_ 0.000001
+    return $err
+}
 
 
 # Create nodes
@@ -83,8 +95,8 @@ set E [$ns node]
     $E set Z_ 0
 
 set F [$ns node]
-    $F set X_ 200
-    $F set Y_ 300
+    $F set X_ 300
+    $F set Y_ 200
     $F set Z_ 0
 
 set G [$ns node]
@@ -98,8 +110,8 @@ set H [$ns node]
     $H set Z_ 0
 
 set L [$ns node]
-    $L set X_ 200
-    $L set Y_ 400
+    $L set X_ 400
+    $L set Y_ 200
     $L set Z_ 0
 
 # Create UDP agents and CBR traffic sources and attach them to node A nd D
@@ -122,17 +134,17 @@ $ns attach-agent $L $recvL
 
 # Connecting sender and receiver nodes
 $ns connect $udpA $recvH
-$ns connect $udpD $recvL
+#$ns connect $udpD $recvL
 
-$ns initial_node_pos $A 10
-$ns initial_node_pos $B 10
-$ns initial_node_pos $C 10
-$ns initial_node_pos $D 10
-$ns initial_node_pos $E 10
-$ns initial_node_pos $F 10
-$ns initial_node_pos $G 10
-$ns initial_node_pos $H 10
-$ns initial_node_pos $L 10
+$ns initial_node_pos $A 30
+$ns initial_node_pos $B 30
+$ns initial_node_pos $C 30
+$ns initial_node_pos $D 30
+$ns initial_node_pos $E 30
+$ns initial_node_pos $F 30
+$ns initial_node_pos $G 30
+$ns initial_node_pos $H 30
+$ns initial_node_pos $L 30
 
 $ns at 1.0 "$cbrA start"
 $ns at 2.0 "$cbrD start"
