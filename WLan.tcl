@@ -36,15 +36,18 @@ set opt(nNodes)         9                        ;# number of nodes
 set ns [new Simulator]
 
 # Create direcory
-set outdir "outFiles/"
-file mkdir $outdir
+set traces "traces/"
+file mkdir $traces
+
+set nams "nams/"
+file mkdir $nams
 
 set senario "$bandwidth-$packetsize-$err_rate"
 
 # Set Up Tracing
 #$ns use-newtrace
-set tracefd [open outFiles/$senario.tr w]
-set namtrace [open outFiles/$senario.nam w]
+set tracefd [open $traces/$senario.tr w]
+set namtrace [open $nams/$senario.nam w]
 $ns trace-all $tracefd
 $ns namtrace-all-wireless $namtrace $opt(x) $opt(y)
 
