@@ -1,3 +1,19 @@
+if {$argc != 3} {
+    puts "The WLan.tcl script requires a 3 arguments: bandwidth packetsize errorRate.(e.g., WLan.tcl 1Mb 512 0.000001)"
+    return 0
+} else {
+    set bandwidth [lindex $argv 0]
+    set packetsize [lindex $argv 1]
+    set err_rate [lindex $argv 2]
+}
+
+
+Mac/802_11 set bandwidth_ $bandwidth
+
+puts "------- Mac/802_11 bandwidth set to $bandwidth"
+puts "------- packetsize set to $packetsize"
+puts "------- error rate set to $err_rate"
+
 # ======================================================================
 # Defining Simulation options
 # ======================================================================
@@ -50,8 +66,8 @@ $ns node-config -adhocRouting $opt(adhocRouting) \
                  -channel [new $opt(chan)] \
                  -topoInstance $topo \
                  -agentTrace ON \
-                 -routerTrace ON \
-                 -macTrace ON \
+                 -routerTrace OFF \
+                 -macTrace OFF \
                  -movementTrace OFF 
 
 #=====================================================
@@ -61,9 +77,10 @@ $ns node-config -IncomingErrProc UniformErr \
                 -OutgoingErrProc UniformErr
 
 proc UniformErr {} {
+    global err_rate
     set err [new ErrorModel]
     $err unit packet
-    $err rate_ 0.000001
+    $err set rate_ $err_rate
     return $err
 }
 
@@ -114,15 +131,23 @@ set L [$ns node]
     $L set Y_ 200
     $L set Z_ 0
 
-# Create UDP agents and CBR traffic sources and attach them to node A nd D
+# Create UDP agents attach them to node A nd D
 set udpA [new Agent/UDP]
-set cbrA [new Application/Traffic/CBR]
 $ns attach-agent $A $udpA
-$cbrA attach-agent $udpA
 
 set udpD [new Agent/UDP]
-set cbrD [new Application/Traffic/CBR]
 $ns attach-agent $D $udpD
+
+# Specify the CBR agent to genrate traffic over udpA
+set cbrA [new Application/Traffic/CBR]
+$cbrA set packetSize_ $packetsize
+$cbrA set interval 0.1
+$cbrA attach-agent $udpA
+
+# Specify the CBR agent to genrate traffic over udpD
+set cbrD [new Application/Traffic/CBR]
+$cbrD set packetSize_ $packetsize
+$cbrD set interval 0.1
 $cbrD attach-agent $udpD
 
 # Create Null agents (traffic sinks) and attach them to node H and L
@@ -134,7 +159,7 @@ $ns attach-agent $L $recvL
 
 # Connecting sender and receiver nodes
 $ns connect $udpA $recvH
-#$ns connect $udpD $recvL
+$ns connect $udpD $recvL
 
 $ns initial_node_pos $A 30
 $ns initial_node_pos $B 30
@@ -146,8 +171,8 @@ $ns initial_node_pos $G 30
 $ns initial_node_pos $H 30
 $ns initial_node_pos $L 30
 
-$ns at 1.0 "$cbrA start"
-$ns at 2.0 "$cbrD start"
+$ns at 0.5 "$cbrA start"
+$ns at 1.0 "$cbrD start"
 $ns at $opt(finish) "finish"
 
 proc finish {} {
