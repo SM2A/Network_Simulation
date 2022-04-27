@@ -141,13 +141,13 @@ $ns attach-agent $D $udpD
 # Specify the CBR agent to genrate traffic over udpA
 set cbrA [new Application/Traffic/CBR]
 $cbrA set packetSize_ $packetsize
-$cbrA set interval 0.1
+$cbrA set interval_ 0.01
 $cbrA attach-agent $udpA
 
 # Specify the CBR agent to genrate traffic over udpD
 set cbrD [new Application/Traffic/CBR]
 $cbrD set packetSize_ $packetsize
-$cbrD set interval 0.1
+$cbrD set interval_ 0.01
 $cbrD attach-agent $udpD
 
 # Create Null agents (traffic sinks) and attach them to node H and L
