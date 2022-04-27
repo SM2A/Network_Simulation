@@ -27,7 +27,7 @@ set opt(ll)             LL                       ;# link layer type
 set opt(ant)            Antenna/OmniAntenna      ;# antenna model
 set opt(ifqlen)         50                       ;# max packet in ifq
 set opt(adhocRouting)   AODV                     ;# routing protocol
-set opt(finish)         10                       ;# time to stop simulation
+set opt(finish)         100                      ;# time to stop simulation
 set opt(x)              600                      ;# X coordinate of the topography
 set opt(y)              500                      ;# Y coordinate of the topography
 set opt(nNodes)         9                        ;# number of nodes
@@ -141,13 +141,13 @@ $ns attach-agent $D $udpD
 # Specify the CBR agent to genrate traffic over udpA
 set cbrA [new Application/Traffic/CBR]
 $cbrA set packetSize_ $packetsize
-$cbrA set interval_ 0.01
+$cbrA set interval_ 0.1
 $cbrA attach-agent $udpA
 
 # Specify the CBR agent to genrate traffic over udpD
 set cbrD [new Application/Traffic/CBR]
 $cbrD set packetSize_ $packetsize
-$cbrD set interval_ 0.01
+$cbrD set interval_ 0.1
 $cbrD attach-agent $udpD
 
 # Create Null agents (traffic sinks) and attach them to node H and L
