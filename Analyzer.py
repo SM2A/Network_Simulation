@@ -12,7 +12,7 @@ class Analyzer:
         self.filename = filename
     
     def throughput(self):
-        return (self.n_received_bytes) / self.sim_duration
+        return (self.n_received_bytes) / self.sim_duration 
     
     def packet_transfer_ratio(self):
         return self.n_received_packets / self.n_sent_packets
