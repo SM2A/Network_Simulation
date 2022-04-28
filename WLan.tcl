@@ -7,9 +7,6 @@ if {$argc != 3} {
     set err_rate [lindex $argv 2]
 }
 
-
-Mac/802_11 set bandwidth_ $bandwidth
-
 puts "------- Mac/802_11 bandwidth set to $bandwidth"
 puts "------- packetsize set to $packetsize"
 puts "------- error rate set to $err_rate"
@@ -31,6 +28,11 @@ set opt(finish)         100                      ;# time to stop simulation
 set opt(x)              600                      ;# X coordinate of the topography
 set opt(y)              500                      ;# Y coordinate of the topography
 set opt(nNodes)         9                        ;# number of nodes
+
+
+# By default data rate is 1Mb, Note that wireless networks use electromagnetic waves rather than coax cable or similar, 
+# the speed of transmitting data (dataRate) used instead of bandwidth.
+Mac/802_11 set dataRate_ $bandwidth
 
 # Create the simulator object
 set ns [new Simulator]

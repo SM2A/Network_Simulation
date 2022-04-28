@@ -7,20 +7,20 @@ from Analyzer import Analyzer
 TCL = 'WLan.tcl'
 
 # Default args
-BANDWIDTH = '1Mb'
+PACKETSIZE = '2048'
 ERROR_RATE = '0.00001'
 
 # Scenario 2: 
     
-packet_sizes = [128, 256, 512, 1024, 1500, 1800,  2048, 4096]
+bandwidthes = [1.5, 55, 155]
 throughput = []
 transfer_ratio = []
 avg_delay = []
-for psize in packet_sizes:
-    prog = TCL + ' ' + BANDWIDTH + ' ' + str(psize) + ' ' + ERROR_RATE
+for bw in bandwidthes:
+    prog = TCL + ' ' + str(bw) + 'Mb' + ' ' + PACKETSIZE + ' ' + ERROR_RATE
     command = 'ns' + ' ' + prog
     os.system(command)
-    analyzer = Analyzer('traces/' + BANDWIDTH + '-' + str(psize) + '-' + ERROR_RATE + '.tr')
+    analyzer = Analyzer('traces/' +str(bw) + 'Mb' + '-' + PACKETSIZE + '-' + ERROR_RATE + '.tr')
     analyzer.parse()
     throughput.append(analyzer.throughput())
     transfer_ratio.append(analyzer.packet_transfer_ratio())
