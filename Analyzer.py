@@ -38,8 +38,3 @@ class Analyzer:
                 pass
         self.sim_duration = float(line[1]) - self.sent_time[0]
 
-
-# analyzer = Analyzer('outFiles/WLan.tr')
-# analyzer.parser()
-# print(analyzer.n_sent_packets, analyzer.n_received_packets)
-# print(analyzer.packet_transfer_ratio(), analyzer.avg_end_to_end_delay(), analyzer.throughput())
