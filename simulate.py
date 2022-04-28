@@ -3,26 +3,24 @@ import random
 import matplotlib.pyplot as plt
 from Analyzer import Analyzer
 
+
 TCL = 'WLan.tcl'
 
 # Default args
 BANDWIDTH = '1Mb'
-PACKETSIZE = '512'
+ERROR_RATE = '0.00001'
 
-# Scenario 1: give 10 different error rates between 0.000001 and 0.00001 and detect impact on performance parameters
-err_rates = []
-for i in range(10):
-    err_rates.append(random.uniform(0.00001, 0.000001))
+# Scenario 2: 
     
-err_rates.sort()
+packet_sizes = [128, 256, 512, 1024, 1500, 1800,  2048, 4096]
 throughput = []
 transfer_ratio = []
 avg_delay = []
-for err_rate in err_rates:
-    prog = TCL + ' ' + BANDWIDTH + ' ' + PACKETSIZE + ' ' + str(err_rate)
+for psize in packet_sizes:
+    prog = TCL + ' ' + BANDWIDTH + ' ' + str(psize) + ' ' + ERROR_RATE
     command = 'ns' + ' ' + prog
     os.system(command)
-    analyzer = Analyzer('traces/' + BANDWIDTH + '-' + PACKETSIZE + '-' + str(err_rate) + '.tr')
+    analyzer = Analyzer('traces/' + BANDWIDTH + '-' + str(psize) + '-' + ERROR_RATE + '.tr')
     analyzer.parse()
     throughput.append(analyzer.throughput())
     transfer_ratio.append(analyzer.packet_transfer_ratio())
