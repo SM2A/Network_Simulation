@@ -7,6 +7,7 @@ class Analyzer:
     delay = dict()
     total_delay = 0
     sim_duration = 0
+    
     def __init__(self, filename):
         self.filename = filename
     
@@ -19,7 +20,7 @@ class Analyzer:
     def avg_end_to_end_delay(self):
         return self.total_delay / self.n_received_packets
             
-    def parser(self):
+    def parse(self):
         trace_file = open(self.filename, 'r')
 
         for line in trace_file.readlines():
@@ -38,7 +39,7 @@ class Analyzer:
         self.sim_duration = float(line[1]) - self.sent_time[0]
 
 
-analyzer = Analyzer('outFiles/WLan.tr')
-analyzer.parser()
-print(analyzer.n_sent_packets, analyzer.n_received_packets)
-print(analyzer.packet_transfer_ratio(), analyzer.avg_end_to_end_delay(), analyzer.throughput())
+# analyzer = Analyzer('outFiles/WLan.tr')
+# analyzer.parser()
+# print(analyzer.n_sent_packets, analyzer.n_received_packets)
+# print(analyzer.packet_transfer_ratio(), analyzer.avg_end_to_end_delay(), analyzer.throughput())

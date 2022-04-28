@@ -42,12 +42,12 @@ file mkdir $traces
 set nams "nams/"
 file mkdir $nams
 
-set senario "$bandwidth-$packetsize-$err_rate"
+set scenario "$bandwidth-$packetsize-$err_rate"
 
 # Set Up Tracing
 #$ns use-newtrace
-set tracefd [open $traces/$senario.tr w]
-set namtrace [open $nams/$senario.nam w]
+set tracefd [open $traces/$scenario.tr w]
+set namtrace [open $nams/$scenario.nam w]
 $ns trace-all $tracefd
 $ns namtrace-all-wireless $namtrace $opt(x) $opt(y)
 
@@ -71,8 +71,8 @@ $ns node-config -adhocRouting $opt(adhocRouting) \
                  -channel [new $opt(chan)] \
                  -topoInstance $topo \
                  -agentTrace ON \
-                 -routerTrace OFF \
-                 -macTrace OFF \
+                 -routerTrace ON \
+                 -macTrace ON \
                  -movementTrace OFF 
 
 #=====================================================
@@ -136,6 +136,11 @@ set L [$ns node]
     $L set Y_ 200
     $L set Z_ 0
 
+
+# A UDP agent accepts data in variable size chunks from an application, and segments the data if needed.
+# The default maximum segment size (MSS) for UDP agents is 1000 byte.
+Agent/UDP set packetSize_   2048
+
 # Create UDP agents attach them to node A nd D
 set udpA [new Agent/UDP]
 $ns attach-agent $A $udpA
@@ -146,13 +151,13 @@ $ns attach-agent $D $udpD
 # Specify the CBR agent to genrate traffic over udpA
 set cbrA [new Application/Traffic/CBR]
 $cbrA set packetSize_ $packetsize
-$cbrA set interval_ 0.1
+$cbrA set interval_ 0.05
 $cbrA attach-agent $udpA
 
 # Specify the CBR agent to genrate traffic over udpD
 set cbrD [new Application/Traffic/CBR]
 $cbrD set packetSize_ $packetsize
-$cbrD set interval_ 0.1
+$cbrD set interval_ 0.05
 $cbrD attach-agent $udpD
 
 # Create Null agents (traffic sinks) and attach them to node H and L
