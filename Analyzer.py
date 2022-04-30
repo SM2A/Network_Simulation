@@ -15,9 +15,13 @@ class Analyzer:
         return (self.n_received_bytes) / self.sim_duration 
     
     def packet_transfer_ratio(self):
+        if self.n_sent_packets == 0:
+            return 0
         return self.n_received_packets / self.n_sent_packets
     
     def avg_end_to_end_delay(self):
+        if self.n_received_packets == 0:
+            return float('inf')
         return self.total_delay / self.n_received_packets
             
     def parse(self):

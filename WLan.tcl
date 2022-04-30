@@ -144,34 +144,59 @@ set L [$ns node]
 Agent/UDP set packetSize_   2048
 
 # Create UDP agents attach them to node A nd D
-set udpA [new Agent/UDP]
-$ns attach-agent $A $udpA
+set udpA1 [new Agent/UDP]
+$ns attach-agent $A $udpA1
 
-set udpD [new Agent/UDP]
-$ns attach-agent $D $udpD
+# set udpA2 [new Agent/UDP]
+# $ns attach-agent $A $udpA2
+
+set udpD1 [new Agent/UDP]
+$ns attach-agent $D $udpD1
+
+# set udpD2 [new Agent/UDP]
+# $ns attach-agent $D $udpD2
 
 # Specify the CBR agent to genrate traffic over udpA
-set cbrA [new Application/Traffic/CBR]
-$cbrA set packetSize_ $packetsize
-$cbrA set interval_ 0.05
-$cbrA attach-agent $udpA
+set cbrA1 [new Application/Traffic/CBR]
+$cbrA1 set packetSize_ $packetsize
+$cbrA1 set interval_ 0.05
+$cbrA1 attach-agent $udpA1
+
+# set cbrA2 [new Application/Traffic/CBR]
+# $cbrA2 set packetSize_ $packetsize
+# $cbrA2 set interval_ 0.01
+# $cbrA2 attach-agent $udpA2
+
 
 # Specify the CBR agent to genrate traffic over udpD
-set cbrD [new Application/Traffic/CBR]
-$cbrD set packetSize_ $packetsize
-$cbrD set interval_ 0.05
-$cbrD attach-agent $udpD
+set cbrD1 [new Application/Traffic/CBR]
+$cbrD1 set packetSize_ $packetsize
+$cbrD1 set interval_ 0.05
+$cbrD1 attach-agent $udpD1
+
+# set cbrD2 [new Application/Traffic/CBR]
+# $cbrD2 set packetSize_ $packetsize
+# $cbrD2 set interval_ 0.01
+# $cbrD2 attach-agent $udpD2
 
 # Create Null agents (traffic sinks) and attach them to node H and L
-set recvH [new Agent/Null]
-$ns attach-agent $H $recvH
+set recvH1 [new Agent/Null]
+$ns attach-agent $H $recvH1
 
-set recvL [new Agent/Null]
-$ns attach-agent $L $recvL
+# set recvH2 [new Agent/Null]
+# $ns attach-agent $H $recvH2
+
+set recvL1 [new Agent/Null]
+$ns attach-agent $L $recvL1
+
+# set recvL2 [new Agent/Null]
+# $ns attach-agent $L $recvL2
 
 # Connecting sender and receiver nodes
-$ns connect $udpA $recvH
-$ns connect $udpD $recvL
+$ns connect $udpA1 $recvH1
+$ns connect $udpD1 $recvL1
+# $ns connect $udpA2 $recvL2
+# $ns connect $udpD2 $recvH2
 
 $ns initial_node_pos $A 30
 $ns initial_node_pos $B 30
@@ -183,8 +208,10 @@ $ns initial_node_pos $G 30
 $ns initial_node_pos $H 30
 $ns initial_node_pos $L 30
 
-$ns at 0.5 "$cbrA start"
-$ns at 1.0 "$cbrD start"
+$ns at 0.5 "$cbrA1 start"
+$ns at 1.0 "$cbrD1 start"
+# $ns at 2.0 "$cbrD2 start"
+# $ns at 2.3 "$cbrA2 start"
 $ns at $opt(finish) "finish"
 
 proc finish {} {
