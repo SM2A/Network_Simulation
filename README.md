@@ -1,2 +1,3 @@
 # Network Simulation
-🎓💻Computer Networks Course Computer Assignment 2 - Spring 2022
+
+This repository contains my Computer Networks course Project (Spring 2022) at University of Tehran.
